@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<project
+
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+
+        <groupId>lin</groupId>
+
+        <artifactId>parent</artifactId>
+
+        <version>0.0.1</version>
+
+    </parent>
+
+    <groupId>lin</groupId>
+
+    <artifactId>lin.core</artifactId>
+
+    <version>0.0.1</version>
+
+    <name>lin.core</name>
+
+    <url>http://maven.apache.org</url>
+
+ 
+
+    <dependencies>
+
+   
+
+        <!-- sso依赖包 -->
+
+        <dependency>
+
+            <groupId>org.apache.axis</groupId>
+
+            <artifactId>axis</artifactId>
+
+            <version>1.4</version>
+
+        </dependency>
+
+        <dependency>
+
+            <groupId>apache-discovery</groupId>
+
+            <artifactId>commons-discovery</artifactId>
+
+            <version>0.4-brew</version>
+
+        </dependency>
+
+        <dependency>
+
+            <groupId>javax.wsdl_1.6.2.v201012040545</groupId>
+
+            <artifactId>javax.wsdl_1.6.2.v201012040545</artifactId>
+
+            <version>0.1</version>
+
+        </dependency>
+
+        <dependency>
+
+            <groupId>jaxrpc</groupId>
+
+            <artifactId>jaxrpc</artifactId>
+
+            <version>0.1</version>
+
+        </dependency>
+
+        <dependency>
+
+            <groupId>saaj</groupId>
+
+            <artifactId>saaj</artifactId>
+
+            <version>1.0</version>
+
+        </dependency>
+
+        <dependency>
+
+            <groupId>commonservice.sso.tomcat.uat.login</groupId>
+
+            <artifactId>sso-login-axis-uat</artifactId>
+
+            <version>0.11</version>
+
+        </dependency>
+
+    </dependencies>
+
+</project>
+
+ 
