@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+
+<mapper namespace="lin.core.mvc.dao.ISysconfigDao">
+
+ 
+
+    <sql id="getSysconfig">
+
+        select *
+
+          from (select t.record_id as id, t.column_name, t.column_value
+
+                  from eui_sysconfig t
+
+                 where t.config_type = #{configType,jdbcType=VARCHAR})
+
+        pivot(
+
+            max(column_value)
+
+            for column_name
+
+            in (${columns})
+
+        )
+
+    </sql>
+
+   
+
+    <select id="getTaskCategoryDefault" resultType="lin.core.mvc.vo.RTaskCategoryDefaultVo">
+
+        <include refid="getSysconfig" />
+
+    </select>
+
+</mapper>

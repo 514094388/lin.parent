@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+
+<mapper namespace="lin.core.user.dao.IUserDao">
+
+ 
+
+    <select id="getUserInfoVo" resultType="lin.core.user.vo.UserInfoVo" parameterType="java.lang.String">
+
+        select
+
+            t.id as id,
+
+            t.account as account,
+
+            t.password as password,
+
+            t.name_cn as nameCn,
+
+            t.email as email,
+
+            t.create_date as createdate,
+
+            t.is_locked_out as isLockedOut,
+
+            t.is_hint_enabled as isHintEnabled,
+
+            t.last_login_date as lastLoginDate,
+
+            t.incorrect_login_attempt as incorrectLoginAttempt,
+
+            t.emp_no as empNo,
+
+            t.name_en as nameEn,
+
+            t.photo_url as photoUrl,
+
+            t.job_title as jobTitle,
+
+            t.job_department as jobDepartment,
+
+            t.remarks as remarks,
+
+            t.max_screen as maxScreen,
+
+            t.open_privacy_set as openPrivacySet
+
+        from eui_user T
+
+        where 1=1 and rownum = 1
+
+        <if test="id != null and id > 0">
+
+            and t.id = #{id,jdbcType=VARCHAR}
+
+        </if>
+
+        <if test="account != null and account != '' ">
+
+            and lower(t.account) = lower(#{account,jdbcType=VARCHAR})
+
+        </if>
+
+    </select>
+
+   
+
+    <insert id="saveUserInfoVo">
+
+        insert into eui_user(id,account,name_cn,email,emp_no,name_en)
+
+        values(
+
+            #{vo.id,jdbcType=DECIMAL},
+
+            lower(#{vo.account,jdbcType=VARCHAR}),
+
+            #{vo.nameCn,jdbcType=VARCHAR},
+
+            #{vo.email,jdbcType=VARCHAR},
+
+            #{vo.empNo,jdbcType=VARCHAR},
+
+            #{vo.nameEn,jdbcType=VARCHAR}
+
+        )
+
+    </insert>
+
+    <update id="update">
+
+        update eui_user
+
+        set id = id
+
+        <if test="vo.account != null">,account = #{vo.account,jdbcType=VARCHAR}</if>
+
+        <if test="vo.nameCn != null">,name_cn = #{vo.nameCn,jdbcType=VARCHAR}</if>
+
+        <if test="vo.email != null">,email = #{vo.email,jdbcType=VARCHAR}</if>
+
+        <if test="vo.createdate != null">,create_date = #{vo.createdate,jdbcType=VARCHAR}</if>
+
+        <if test="vo.isLockedOut != null">,is_Locked_Out = #{vo.isLockedOut,jdbcType=VARCHAR}</if>
+
+        <if test="vo.isHintEnabled != null">,is_Hint_Enabled = #{vo.isHintEnabled,jdbcType=VARCHAR}</if>
+
+        <if test="vo.lastLoginDate != null">,last_Login_Date = #{vo.lastLoginDate,jdbcType=VARCHAR}</if>
+
+        <if test="vo.incorrectLoginAttempt != null">,incorrect_Login_Attempt = #{vo.incorrectLoginAttempt,jdbcType=VARCHAR}</if>
+
+        <if test="vo.empNo != null">,emp_No = #{vo.empNo,jdbcType=VARCHAR}</if>
+
+        <if test="vo.nameEn != null">,name_En = #{vo.nameEn,jdbcType=VARCHAR}</if>
+
+        <if test="vo.photoUrl != null">,photo_Url = #{vo.photoUrl,jdbcType=VARCHAR}</if>
+
+        <if test="vo.jobTitle != null">,job_Title = #{vo.jobTitle,jdbcType=VARCHAR}</if>
+
+        <if test="vo.jobDepartment != null">,job_Department = #{vo.jobDepartment,jdbcType=VARCHAR}</if>
+
+        <if test="vo.remarks != null">,remarks = #{vo.remarks,jdbcType=VARCHAR}</if>
+
+        <if test="vo.maxScreen != null">,max_Screen = #{vo.maxScreen,jdbcType=VARCHAR}</if>
+
+        <if test="vo.openPrivacySet != null">,open_Privacy_Set = #{vo.openPrivacySet,jdbcType=VARCHAR}</if>
+
+        where id = #{vo.id,jdbcType=NUMBER}
+
+    </update>
+
+    <select id="getAllUserList" resultType="lin.core.user.vo.RUserListVo" parameterType="java.lang.String">
+
+        select
+
+            t.id as id,
+
+            t.photo_url as photoUrl,
+
+            t.account as account,
+
+            t.name_cn as nameCn
+
+        from eui_user t
+
+        where
+
+        lower(trim(t.account)) like lower('%' || trim(#{userStr,jdbcType=VARCHAR}) || '%' )
+
+        or
+
+        lower(trim(t.name_cn)) like lower('%' || trim(#{userStr,jdbcType=VARCHAR}) || '%' )
+
+    </select>
+
+   
+
+    <select id="getUserTimeLineByYear" resultType="lin.core.user.vo.RUserTimeLineVo">
+
+        (select
+
+         t2.id as id,
+
+        t2.task_titile as title,
+
+        t2.task_description as describe,
+
+        t2.comments as detaileContent,
+
+        t2.creation_date as creationDate,
+
+        t2.last_update_date as lastUpdateDate
+
+        from task_author_link t1
+
+        join task t2 on (t1.task_id = t2.id)
+
+        where t1.user_id = #{userId,jdbcType=DECIMAL}
+
+        and to_char( t2.creation_date,'yyyy') = #{year,jdbcType=VARCHAR})
+
+        union all
+
+        (select
+
+        t3.id as id,
+
+        t3.process_name as title,
+
+        t3.titile as describe,
+
+        t3.app_name as detaileContent,
+
+        t3.creation_date as creationDate,
+
+        t3.last_update_date as lastUpdateDate
+
+        from reviewtask t3
+
+        where t3.author_id = #{userId,jdbcType=DECIMAL}
+
+        and to_char( t3.creation_date,'yyyy') = #{year,jdbcType=VARCHAR})
+
+    </select>
+
+   
+
+   
+
+    <select id="getUserTimeLineFix" resultType="java.lang.String">
+
+        select distinct * from ((select
+
+         to_char( t2.creation_date,'yyyy')  as creationDate
+
+        from task_author_link t1
+
+        join task t2 on (t1.task_id = t2.id)
+
+        where t1.user_id = #{userId,jdbcType=DECIMAL})
+
+        union all
+
+        (select
+
+        to_char( t3.creation_date,'yyyy')  as creationDate
+
+        from reviewtask t3
+
+        where t3.author_id = #{userId,jdbcType=DECIMAL}))
+
+    </select>
+
+   
+
+   
+
+</mapper>

@@ -19,7 +19,6 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  
 
 //-Psit -Dmaven.test.skip=true
-
  
 
 @SpringBootApplication

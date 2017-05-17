@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+
+<mapper namespace="lin.core.mvc.dao.IAutoToolsDao">
+
+   
+
+    <select id="getTableComments" resultType="lin.core.mvc.vo.autotools.TableInfoVo">
+
+        select t.table_name as tableName,t.comments
+
+          from user_tab_comments t
+
+        WHERE t.table_name in
+
+         <foreach item="tableName" collection="tableNameSet" separator="," open="(" close=")" index="">
+
+            upper(#{tableName,jdbcType=VARCHAR})
+
+        </foreach>
+
+    </select>
+
+   
+
+    <resultMap id="getColumnsCommentsResult" type="lin.core.mvc.vo.autotools.TableColumnsInfoVo">
+
+        <result property="columnName" column="columnName"/>
+
+        <result property="comments" column="comments"/>
+
+    </resultMap>
+
+    <select id="getColumnsComments" resultMap="getColumnsCommentsResult">
+
+        select
+
+            t.column_name as columnName,
+
+            t.comments as comments
+
+        from user_col_comments t
+
+        where t.table_name = upper(#{tableName,jdbcType=VARCHAR})
+
+    </select>
+
+   
+
+</mapper>

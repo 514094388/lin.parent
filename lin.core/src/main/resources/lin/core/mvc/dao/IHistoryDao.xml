@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+
+<mapper namespace="lin.core.mvc.dao.IHistoryDao">
+
+ 
+
+   <sql id="Base_Column_List">
+
+        t.id as historyId,
+
+        t.object_type as objectType,
+
+        t.object_id as objectId,
+
+        t.action as action,
+
+        t.previous as previous,
+
+        t.after as after,
+
+        t.created_by as createdBy,
+
+        t.creation_date as creationDate,
+
+        t.last_updated_by as lastUpdatedBy,
+
+        t.last_update_date as lastUpdateDate
+
+    </sql>
+
+  
+
+   
+
+    <insert id="addHistory">
+
+   
+
+        <selectKey keyProperty="historyId"  resultType="Long" order="BEFORE" >
+
+            select dseq.nextval from dual
+
+        </selectKey>
+
+   
+
+        begin
+
+            insert into eui_history(
+
+                id,
+
+                object_type,
+
+                object_id,
+
+                action,
+
+                previous,
+
+                after,
+
+                created_by,
+
+                creation_date
+
+            )
+
+            values(
+
+                #{historyId,jdbcType=DECIMAL},
+
+                #{objectType,jdbcType=VARCHAR},
+
+                #{objectId,jdbcType=DECIMAL},
+
+                #{action,jdbcType=VARCHAR},
+
+                #{previous,jdbcType=VARCHAR},
+
+                #{after,jdbcType=VARCHAR},
+
+                #{createdBy,jdbcType=DECIMAL},
+
+                sysdate
+
+            );
+
+        end;
+
+    </insert>
+
+   
+
+   
+
+   
+
+    <select id="getHistoryListByPagination" resultType="lin.core.mvc.vo.HistoryVo">
+
+        select * from(
+
+          select rownum rn,a.* from (
+
+                select
+
+                <include refid="Base_Column_List" />
+
+                from eui_history t
+
+                where 1=1
+
+                <if test="vo.objectType != null and vo.objectType != ''">
+
+                    and t.object_type = #{vo.objectType,jdbcType=VARCHAR}
+
+                </if>
+
+                <if test="vo.objectId != null">
+
+                    and t.object_id = #{vo.objectId,jdbcType=DECIMAL}
+
+                </if>
+
+                order by t.creation_date desc
+
+        ) a  where rownum <![CDATA[ <= ]]> #{page.end}
+
+        ) b  where rn <![CDATA[ >= ]]> #{page.start}
+
+    </select>
+
+   
+
+   
+
+    <select id="getHistoryListByPaginationCount" resultType="java.lang.Long">
+
+            select count(*)
+
+            from eui_history t
+
+            where 1=1
+
+            <if test="vo.objectType != null and vo.objectType != ''">
+
+                and t.object_type = #{vo.objectType,jdbcType=VARCHAR}
+
+            </if>
+
+            <if test="vo.objectId != null">
+
+                and t.object_id = #{vo.objectId,jdbcType=DECIMAL}
+
+            </if>
+
+    </select>
+
+   
+
+</mapper>
